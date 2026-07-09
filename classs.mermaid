@@ -1,0 +1,58 @@
+classDiagram
+    class Referee {
+        +Integer id
+        +String firstName
+        +String lastName
+        +String nationality
+        +Enum confederation
+        +Enum category
+        +Integer experience
+        +Enum status
+        +Date createdAt
+        +Date updatedAt
+        +findAll()
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +destroy(id)
+        +getAssignments()
+        +validate()
+    }
+
+    class Match {
+        +Integer id
+        +String homeTeam
+        +String awayTeam
+        +String stadium
+        +String hostCity
+        +Date matchDate
+        +Enum phase
+        +Date createdAt
+        +Date updatedAt
+        +findAll()
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +destroy(id)
+        +getAssignments()
+        +validate()
+    }
+
+    class Assignment {
+        +Integer id
+        +Integer refereeId
+        +Integer matchId
+        +Enum role
+        +Date createdAt
+        +Date updatedAt
+        +findAll()
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +destroy(id)
+        +getReferee()
+        +getMatch()
+    }
+
+    Referee "1" --> "N" Assignment : has
+    Match "1" --> "N" Assignment : has

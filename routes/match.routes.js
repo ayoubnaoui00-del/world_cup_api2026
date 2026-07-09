@@ -9,7 +9,7 @@ import {
   getMatchesByReferee,
   getMatchWithReferees,
   updateMatchScore,
-} from '../controllers/matchController.js';
+} from '../controllers/match.controller.js';
 
 const router = express.Router();
 
@@ -20,6 +20,5 @@ router.put('/:id', updateMatch);
 router.delete('/:id', deleteMatch);                     
 router.get('/referee/:referee', getMatchesByReferee);   
 router.get('/:id/referees', getMatchWithReferees);      
-router.patch('/:id/score', updateMatchScore);           
 
 export default router;

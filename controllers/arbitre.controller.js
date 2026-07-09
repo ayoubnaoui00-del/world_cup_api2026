@@ -3,20 +3,17 @@ import Referee from "../models/arbitre.model.js"
 
 export const createReferee = async (req, res) => {
   try {
-    const { name, email, experience, country } = req.body;
+    const { firstName, lastName, nationality, confederation ,category,experience,status} = req.body;
 
     
-    if (!name || !email) {
+    if (!firstName || !lastName||!nationality||!confederation||!category||!status) {
       return res.status(400).json({ 
-        error: 'Name and email are required' 
+        error: 'All fields are required' 
       });
     }
 
     const referee = await Referee.create({
-      name,
-      email,
-      experience,
-      country,
+    firstName, lastName, nationality, confederation ,category,experience,status
     });
 
     res.status(201).json({
@@ -32,7 +29,7 @@ export const createReferee = async (req, res) => {
 
 export const getAllReferees  = async (req,  res) => {
     try {
-        const referees = await Referee.findAll();
+        const referees = await Referee.findAll({  order: [['createdAt', 'DESC']]});
         res.status(200).json(referees)
     } catch (error) {
         res.status(500).json({error : "server error"})
@@ -60,6 +57,9 @@ export const updateRefree = async (req , res) => {
       });
     }
     await referee.update(req.body)
+
+       res.status(200).json({msg:"Congratulation  refree is updated"})
+    return
     } catch (error) {
         res.status(500).json({error : "server error"});
     }

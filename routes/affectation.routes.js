@@ -1,24 +1,22 @@
 import express from 'express';
 import {
   createAffectation,
-  getAllAffectations,
-  getAffectationById,
+  getAllAffectation,
   updateAffectation,
   deleteAffectation,
-  getAffectationsByReferee,
-  getAffectationsByMatch,
-  updateAffectationStatus,
-} from '../controllers/affectationController.js';
+
+  getById,
+} from '../controllers/affectation.controller.js';
 
 const router = express.Router();
 
 router.post('/', createAffectation);                            
-router.get('/', getAllAffectations);                              
-router.get('/:id', getAffectationById);                           
+router.get('/', getAllAffectation);                              
+router.get('/:id', getById);                           
 router.put('/:id', updateAffectation);                           
 router.delete('/:id', deleteAffectation);                         
-router.get('/referee/:refereeId', getAffectationsByReferee);      
-router.get('/match/:matchId', getAffectationsByMatch);            
-router.patch('/:id/status', updateAffectationStatus);           
+// router.get('/referee/:refereeId', getAffectationsByReferee);      
+// router.get('/match/:matchId', getAffectationsByMatch);            
+// router.patch('/:id/status', updateAffectationStatus);           
 
 export default router;

@@ -1,25 +1,26 @@
 import Match from '../models/matches.model.js';
-import Affectation from '../models/Affectation.js';
-import Referee from '../models/Referee.js';
+import Affectation from '../models/affectation.model.js';
+import Referee from '../models/arbitre.model.js';
 
 export const createMatch = async (req, res) => {
   try {
-    const { date, homeTeam, awayTeam, referee, score } = req.body;
+    const { homeTeam, awayTeam, stadium, hostCity, matchDate, phase } = req.body;
 
-    
-    if (!date || !homeTeam || !awayTeam || !referee) {
+
+    if (!stadium || !homeTeam || !awayTeam || !hostCity || !matchDate || !phase) {
       return res.status(400).json({
         error: 'Date, homeTeam, awayTeam, and referee are required',
       });
     }
 
-    
+
     const match = await Match.create({
-      date,
+      matchDate,
       homeTeam,
+      stadium,
       awayTeam,
-      referee,
-      score: score || '0-0',
+      hostCity,
+      phase,
     });
 
     res.status(201).json({
@@ -37,6 +38,12 @@ export const createMatch = async (req, res) => {
 export const getAllMatches = async (req, res) => {
   try {
     const matches = await Match.findAll();
+
+    if (!matches.length) {
+      res.status(404).json({
+        error: "No matches founded",
+      });
+    }
 
     res.status(200).json({
       message: 'Matches retrieved successfully',
@@ -75,7 +82,7 @@ export const getMatchById = async (req, res) => {
 export const updateMatch = async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, homeTeam, awayTeam, referee, score } = req.body;
+    const { stadium, homeTeam, awayTeam, matchDate, hostCity, phase } = req.body;
 
     const match = await Match.findByPk(id);
 
@@ -87,11 +94,12 @@ export const updateMatch = async (req, res) => {
 
 
     await match.update({
-      date: date || match.date,
-      homeTeam: homeTeam || match.homeTeam,
-      awayTeam: awayTeam || match.awayTeam,
-      referee: referee || match.referee,
-      score: score !== undefined ? score : match.score,
+      matchDate: matchDate ?? match.matchDate,
+      homeTeam: homeTeam ?? match.homeTeam,
+      stadium: stadium ?? match.stadium,
+      awayTeam: awayTeam ?? match.awayTeam,
+      hostCity: hostCity ?? match.hostCity,
+      phase: phase ?? match.phase,
     });
 
     res.status(200).json({
@@ -128,6 +136,62 @@ export const deleteMatch = async (req, res) => {
     res.status(500).json({
       error: error.message,
     });
+  }
+};
+
+export const getMatchesByReferee = async (req, res) => {
+  try {
+    const { referee } = req.params;
+    const matches = await Match.findAll({ where: { referee } });
+
+    res.status(200).json({
+      message: 'Matches retrieved successfully',
+      data: matches,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getMatchWithReferees = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const match = await Match.findByPk(id);
+
+    if (!match) {
+      return res.status(404).json({ error: 'Match not found' });
+    }
+
+    const assignments = await Affectation.findAll({ where: { matchId: id } });
+    const referees = assignments.map((assignment) => assignment.refereeId);
+
+    res.status(200).json({
+      message: 'Match referees retrieved successfully',
+      data: { match, referees },
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateMatchScore = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { score } = req.body;
+    const match = await Match.findByPk(id);
+
+    if (!match) {
+      return res.status(404).json({ error: 'Match not found' });
+    }
+
+    await match.update({ score });
+
+    res.status(200).json({
+      message: 'Match score updated successfully',
+      data: match,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

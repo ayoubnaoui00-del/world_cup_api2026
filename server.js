@@ -7,7 +7,7 @@ import refereeRoutes from "./routes/arbitre.routes.js";
 import matchRoutes from "./routes/match.routes.js";
 import assignmentRoutes from "./routes/affectation.routes.js";
 
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? 4000;
 const app = express();
 
 app.use(express.json());
