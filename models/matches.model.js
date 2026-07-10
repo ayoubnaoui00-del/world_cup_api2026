@@ -22,13 +22,10 @@ const Match = sequelize.define('Match', {
   hostCity: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate:{max:10,min:1}
   },
   matchDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  phase: {
-    type: DataTypes.ENUM('Group stage', 'Round of 16', 'Quarter-final', 'Semi-final', 'Final'),
+    type : DataTypes.DATE?
     allowNull: false,
   },
 }, {

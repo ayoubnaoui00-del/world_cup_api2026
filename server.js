@@ -6,6 +6,8 @@ import errorHandler from "./middlewares/error.middleware.js";
 import refereeRoutes from "./routes/arbitre.routes.js";
 import matchRoutes from "./routes/match.routes.js";
 import assignmentRoutes from "./routes/affectation.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 const PORT = process.env.PORT ?? 4000;
 const app = express();
@@ -13,6 +15,8 @@ const app = express();
 app.use(express.json());
 app.use(logger);
 
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
 app.use('/referees', refereeRoutes);
 app.use('/matches', matchRoutes);
 app.use('/assignments', assignmentRoutes);
